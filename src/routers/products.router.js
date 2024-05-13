@@ -77,7 +77,7 @@ router.get('/products/:id', async (req, res, next) => {
       return res.status(404).json({ message: '해당 상품을 찾을 수 없습니다' });
     return res
       .status(200)
-      .json({ message: '상품 상세 조회에 성공했습니다.', data: data });
+      .json({ message: '상품 상세 조회에 성공했습니다.', product: data });
   } catch (err) {
     next(err);
     return res
@@ -108,7 +108,7 @@ router.put('/products/:id', async (req, res, next) => {
     }).exec();
     return res
       .status(200)
-      .json({ message: '상품 수정에 성공했습니다.', data: updatedProduct });
+      .json({ message: '상품 수정에 성공했습니다.', product : updatedProduct });
   } catch (err) {
     next(err);
     return res
@@ -133,7 +133,7 @@ router.delete('/products/:id', async (req, res, next) => {
     if (data.password !== password) return res.status(401).json({ message: '비밀번호가 일치하지 않습니다.' });
 
     const deletedProduct = await product.findByIdAndDelete(id);
-    return res.status(200).json({ message: '상품 삭제가 완료되었습니다', data: deletedProduct });
+    return res.status(200).json({ message: '상품 삭제가 완료되었습니다', product: deletedProduct });
   } catch (err) {
     next(err);
     return res.status(500).json({ message: '예상치 못한 에러가 발생했습니다. 관리자에게 문의해 주세요.' });
