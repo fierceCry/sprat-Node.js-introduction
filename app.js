@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(morgan("combined"));
 app.use(errorHandlerMiddleware);
 
-app.use('/api', router)
+app.use(router)
 app.get("/ping", (req, res, next) => {
   res.status(200).json({ message: "pong" });
 });
