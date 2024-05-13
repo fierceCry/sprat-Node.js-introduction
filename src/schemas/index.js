@@ -5,7 +5,7 @@ const connect = () => {
     .connect(
       process.env.MONGO_DB,
       {
-        dbName: 'test2',
+        dbName: 'test',
       },
     )
     .catch((err) => console.log(err))
