@@ -23,15 +23,20 @@ const productSchema = Joi.object({
     ),
 });
 
+const passwordSchema = Joi.object({
+  password: Joi.string()
+    .required()
+    .error(new Error('비밀번호를 입력해주세요.'))
+});
+
+
 const router = express.Router();
 
 // 상품 생성
 router.post('/products', async (req, res, next) => {
   const { status, ...createData } = req.body;
   const { error } = productSchema.validate(createData);
-  if (error) {
-    return res.status(400).json({ message: error.message });
-  }
+  if (error) return res.status(400).json({ message: error.message });
   try {
     const data = await product.findOne({ name: createData.name });
     if (data) {
@@ -73,8 +78,8 @@ router.get('/products/:id', async (req, res, next) => {
 
   try {
     const data = await product.findById(id).exec();
-    if (!data)
-      return res.status(404).json({ message: '해당 상품을 찾을 수 없습니다' });
+    if (!data) return res.status(404).json({ message: '해당 상품을 찾을 수 없습니다' });
+
     return res
       .status(200)
       .json({ message: '상품 상세 조회에 성공했습니다.', product: data });
@@ -125,7 +130,9 @@ router.delete('/products/:id', async (req, res, next) => {
   const { password } = req.body;
 
   if (!id) return res.status(400).json({ message: 'id값을 입력해주세요' });
-  if (!password) return res.status(400).json({ message: '비밀번호를 입력해주세요.' });
+
+  const { error } = passwordSchema.validate({ password });
+  if (error) return res.status(400).json({ message: error.message });
 
   try {
     const data = await product.findById(id).exec();
