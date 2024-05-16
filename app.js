@@ -4,7 +4,7 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import connect from './src/schemas/index.js';
 import router from './src/routers/products.router.js';
-import errorHandlerMiddleware from './src/middlewarmies/error-handler.middleware.js';
+import { globalErrorHandler } from './src/middlewarmies/error-handler.middleware.js';
 
 dotenv.config();
 
@@ -12,7 +12,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(morgan("combined"));
-app.use(errorHandlerMiddleware);
+app.use(globalErrorHandler);
 
 app.use(router)
 
