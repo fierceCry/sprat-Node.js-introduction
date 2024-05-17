@@ -17,8 +17,6 @@ router.post('/products', catchAsync(async (req, res) => {
     const createData = req.body;
     const { error } = productSchema.validate(createData);
     if (error) return res.status(400).json({ message: error.message });
-
-    try {
       const data = await product.findOne({ name: createData.name });
       if (data) {
         return res.status(409).json({ message: '이미 등록된 상품입니다.' });
@@ -44,31 +42,19 @@ router.post('/products', catchAsync(async (req, res) => {
       return res.status(201).json({
         message: '상품 생성에 성공했습니다',
         product: productResponse,
-      });
-    } catch {
-      return res.status(500).json({
-        message: '예상치 못한 에러가 발생했습니다. 관리자에게 문의해 주세요.',
-      });
-    }
-  }),
-);
+      });}
+));
 
 // 모든 상품 조회
 router.get('/products', catchAsync(async (req, res) => {
-    try {
-      const data = await product
-        .find()
-        .select('-password')
-        .sort({ createdAt: -1 })
-        .exec();
-      return res.status(200).json({ products: data });
-    } catch {
-      return res.status(500).json({
-        message: '예상치 못한 에러가 발생했습니다. 관리자에게 문의해 주세요.',
-      });
-    }
-  }),
-);
+  const data = await product
+  .find()
+  .select('-password') 
+    .sort({ createdAt: -1 })
+    .exec();
+  return res.status(200).json({ products: data });
+}));
+
 
 // 상품 상세 조회
 router.get('/products/:id', catchAsync(async (req, res) => {
@@ -104,7 +90,6 @@ router.patch('/products/:id', catchAsync(async (req, res) => {
     const { error } = productUpdateSchema.validate(updateData);
     if (error) return res.status(400).json({ message: error.message });
 
-    try {
       const data = await product.findById(id).exec();
       if (!data)
         return res
@@ -140,14 +125,8 @@ router.patch('/products/:id', catchAsync(async (req, res) => {
       return res.status(200).json({
         message: '상품 수정에 성공했습니다.',
         product: updatedProduct,
-      });
-    } catch {
-      return res.status(500).json({
-        message: '예상치 못한 에러가 발생했습니다. 관리자에게 문의해 주세요.',
-      });
-    }
-  }),
-);
+      })}
+));
 
 // 상품 삭제
 router.delete('/products/:id', catchAsync(async (req, res) => {
@@ -159,7 +138,6 @@ router.delete('/products/:id', catchAsync(async (req, res) => {
     const { error } = passwordSchema.validate({ password });
     if (error) return res.status(400).json({ message: error.message });
 
-    try {
       const data = await product.findById(id).exec();
       if (!data) return res.status(404).json({ message: '상품이 없습니다' });
       const userPassword = await bcrypt.compare(password, data.password);
@@ -175,12 +153,8 @@ router.delete('/products/:id', catchAsync(async (req, res) => {
         message: '상품 삭제가 완료되었습니다',
         product: deletedProduct,
       });
-    } catch {
-      return res.status(500).json({
-        message: '예상치 못한 에러가 발생했습니다. 관리자에게 문의해 주세요.',
-      });
     }
-  }),
+  ),
 );
 
 export default router;
